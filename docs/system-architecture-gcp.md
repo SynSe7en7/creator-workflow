@@ -9,7 +9,10 @@ interface TechnologyStack {
     framework: 'Next.js 14';
     language: 'TypeScript';
     styling: 'Tailwind CSS';
-    stateManagement: 'Zustand';
+    stateManagement: {
+      clientState: 'Jotai';
+      serverState: 'TanStack Query';
+    };
     workflowEngine: 'ReactFlow';
     editor: 'TipTap';
     components: 'shadcn/ui';
@@ -44,7 +47,43 @@ interface TechnologyStack {
 }
 ```
 
-### 1.2 GCP Service Configuration
+### 1.2 State Management Architecture
+```typescript
+interface StateManagement {
+  atoms: {
+    user: {
+      atom: 'userAtom';
+      storage: true;
+      type: 'User | null';
+    };
+    workflow: {
+      atom: 'workflowAtom';
+      storage: false;
+      type: 'WorkflowState';
+    };
+    ui: {
+      atom: 'uiAtom';
+      storage: true;
+      type: 'UIState';
+    };
+  };
+  
+  queries: {
+    workflow: {
+      key: ['workflow', 'id'];
+      staleTime: 60000;
+      cacheTime: 300000;
+    };
+    research: {
+      key: ['research', 'query'];
+      staleTime: 30000;
+      cacheTime: 300000;
+    };
+  };
+}
+```
+
+### 1.3 GCP Service Configuration
 ```typescript
 interface GCPConfiguration {
   cloudRun: {
@@ -81,12 +120,81 @@ interface GCPConfiguration {
 ## 2. Database Schema
 
 ### 2.1 Core Tables
-[Previous database schema section remains the same as it's Supabase-specific]
+```sql
+-- Enable Extensions
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "vector";
+
+-- Users
+CREATE TABLE users (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  email TEXT UNIQUE NOT NULL,
+  metadata JSONB DEFAULT '{}'::jsonb,
+  settings JSONB DEFAULT '{}'::jsonb,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Workflows
+CREATE TABLE workflows (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  nodes JSONB NOT NULL,
+  edges JSONB NOT NULL,
+  metadata JSONB DEFAULT '{}'::jsonb,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Content
+CREATE TABLE content (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  workflow_id UUID REFERENCES workflows(id) ON DELETE CASCADE,
+  type TEXT NOT NULL,
+  content TEXT NOT NULL,
+  metadata JSONB DEFAULT '{}'::jsonb,
+  embedding vector(512),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Research Sources
+CREATE TABLE research_sources (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  url TEXT,
+  title TEXT,
+  content TEXT,
+  metadata JSONB DEFAULT '{}'::jsonb,
+  embedding vector(512),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
 
 ## 3. Application Components
 
 ### 3.1 Core Components
 ```typescript
+interface ComponentArchitecture {
+  providers: {
+    jotai: 'JotaiProvider';
+    query: 'QueryClientProvider';
+    supabase: 'SupabaseProvider';
+  };
+  
+  state: {
+    atoms: Record<string, Atom<any>>;
+    queries: Record<string, QueryConfig>;
+    persistence: AtomStorage;
+  };
+  
+  hooks: {
+    useWorkflow: WorkflowHook;
+    useResearch: ResearchHook;
+    useContent: ContentHook;
+  };
+}
+
 interface ServiceArchitecture {
   frontend: {
     service: 'Cloud Run';
@@ -112,58 +220,58 @@ interface ServiceArchitecture {
     };
   };
 }
-
-interface AIServices {
-  gemini: {
-    service: 'Gemini API';
-    models: {
-      generation: 'gemini-1.5-pro';
-      vision: 'gemini-pro-vision';
-    };
-    configuration: {
-      temperature: 0.7;
-      topK: 40;
-      topP: 0.95;
-    };
-  };
-  
-  vectorization: {
-    service: 'pgvector';
-    dimensions: 512;
-    indexType: 'ivfflat';
-  };
-}
 ```
 
-### 3.2 Infrastructure Components
+### 3.2 State Management Implementation
 ```typescript
-interface InfrastructureComponents {
-  networking: {
-    loadBalancer: 'Cloud Load Balancing';
-    cdn: 'Cloud CDN';
-    security: 'Cloud Armor';
+interface StateImplementation {
+  atoms: {
+    user: atom<User | null>(null);
+    workflow: atom<WorkflowState>({
+      nodes: [],
+      edges: [],
+      selected: null
+    });
+    ui: atom<UIState>({
+      theme: 'light',
+      sidebarOpen: true
+    });
   };
   
-  monitoring: {
-    metrics: 'Cloud Monitoring';
-    logging: 'Cloud Logging';
-    tracing: 'Cloud Trace';
-    alerts: 'Cloud Monitoring Alerts';
-  };
-  
-  storage: {
-    assets: 'Cloud Storage';
-    cache: 'Cloud Memorystore';
-    secrets: 'Secret Manager';
+  queries: {
+    useWorkflow: UseQueryResult<Workflow>;
+    useResearch: UseQueryResult<ResearchData>;
+    useContent: UseQueryResult<Content>;
   };
 }
 ```
 
 ## 4. API Structure
-[Previous API structure section remains the same]
 
-## 5. State Management
-[Previous state management section remains the same]
+### 4.1 REST Endpoints
+```typescript
+interface APIEndpoints {
+  workflow: {
+    list: 'GET /api/workflows';
+    create: 'POST /api/workflows';
+    get: 'GET /api/workflows/:id';
+    update: 'PUT /api/workflows/:id';
+    delete: 'DELETE /api/workflows/:id';
+  };
+  
+  content: {
+    create: 'POST /api/content';
+    get: 'GET /api/content/:id';
+    update: 'PUT /api/content/:id';
+    delete: 'DELETE /api/content/:id';
+  };
+  
+  research: {
+    search: 'POST /api/research/search';
+    extract: 'POST /api/research/extract';
+    store: 'POST /api/research/store';
+  };
+}
 
 ## 6. Security Implementation
 
