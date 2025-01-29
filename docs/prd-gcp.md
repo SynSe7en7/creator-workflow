@@ -20,6 +20,36 @@ Future Users:
 - Developer advocates
 - Product managers
 
+# Product Requirements Document
+## AI Creator Workflow Platform
+
+## 1. Product Overview
+
+### 1.1 Vision Statement
+Create a visual workflow automation platform leveraging AI to help technical thought leaders efficiently create, manage, and distribute consistent content across platforms.
+
+### 1.2 Initial User Profile (You)
+```typescript
+interface InitialUser {
+  role: 'Technical Founder/CTO';
+  focus: [
+    'AI Development',
+    'Product Management',
+    'Technical Leadership'
+  ];
+  goals: {
+    followers: '50K in 12 months';
+    contentTypes: [
+      'Technical Articles',
+      'Twitter Threads',
+      'LinkedIn Posts',
+      'Build Documentation'
+    ];
+    platforms: ['LinkedIn', 'Twitter'];
+  };
+}
+```
+
 ### 1.3 Success Metrics
 ```typescript
 interface SuccessMetrics {
@@ -29,149 +59,178 @@ interface SuccessMetrics {
     contentOutput: '5-7 pieces/week';
   };
   
+  content: {
+    voiceConsistency: '> 95%';
+    qualityScore: '> 90%';
+    researchAccuracy: '> 95%';
+  };
+  
   platform: {
     uptime: '99.95%';
     responseTime: '< 500ms';
-    errorRate: '< 1%';
     userRetention: '> 90%';
   };
-  
-  ai: {
-    geminiLatency: '< 3s';
-    voiceAccuracy: '> 95%';
-    contentQuality: '> 90%';
-  };
 }
 ```
 
-## 2. Platform Architecture
+## 2. Core Features
 
-### 2.1 Infrastructure Components
-```typescript
-interface PlatformArchitecture {
-  compute: {
-    service: 'Cloud Run';
-    features: {
-      autoScaling: true;
-      containerization: true;
-      globalDeployment: true;
-    };
-  };
-  
-  storage: {
-    primary: 'Cloud Storage';
-    database: 'Supabase';
-    cache: 'Cloud Memorystore';
-    features: {
-      cdnIntegration: true;
-      backups: true;
-      versionControl: true;
-    };
-  };
-  
-  ai: {
-    primary: 'Gemini 1.5 Pro';
-    vectorStorage: 'pgvector';
-    development: 'Claude 3.5 Sonnet';
-    features: {
-      streaming: true;
-      contextualGeneration: true;
-      vectorSearch: true;
-    };
-  };
-}
-```
-
-## 3. Core Features
-
-### 3.1 Workflow System
+### 2.1 Visual Workflow System
 ```typescript
 interface WorkflowSystem {
   canvas: {
-    engine: 'ReactFlow';
+    type: 'Visual Node Editor';
     features: {
       dragAndDrop: true;
       realTimePreview: true;
-      customNodes: true;
+      templateSystem: true;
       undo: true;
     };
-    storage: {
-      service: 'Cloud Storage';
-      backup: true;
-      versioning: true;
+  };
+  
+  nodes: {
+    research: {
+      webScraping: true;
+      vectorStorage: true;
+      summarization: true;
+    };
+    content: {
+      generation: true;
+      formatting: true;
+      optimization: true;
+    };
+    publishing: {
+      scheduling: true;
+      crossPosting: true;
+      analytics: true;
     };
   };
   
-  execution: {
-    service: 'Cloud Run';
-    features: {
-      parallelProcessing: true;
-      errorHandling: true;
-      monitoring: true;
-    };
-    scaling: {
-      auto: true;
-      limits: {
-        min: 1;
-        max: 10;
-      };
-    };
+  state: {
+    atomicUpdates: true;
+    persistence: true;
+    realtime: true;
+    undo: true;
   };
 }
 ```
 
-### 3.2 Content Creation System
+### 2.2 Content Creation System
 ```typescript
 interface ContentSystem {
-  editor: {
-    type: 'markdown';
-    features: {
-      richText: true;
-      codeBlocks: true;
-      assetManagement: true;
+  research: {
+    webScraping: true;
+    aiAnalysis: true;
+    vectorStorage: true;
+    sourceManagement: true;
+  };
+  
+  generation: {
+    templates: true;
+    aiAssistance: true;
+    brandVoice: true;
+    formatting: true;
+  };
+  
+  editing: {
+    markdown: true;
+    realTimePreview: true;
+    versionControl: true;
+    collaboration: false; // Future
+  };
+}
+```
+
+### 2.3 Platform Integration
+```typescript
+interface PlatformIntegration {
+  linkedin: {
+    posts: {
+      formatting: true;
+      imaging: true;
+      scheduling: true;
     };
-    storage: {
-      service: 'Cloud Storage';
-      cdn: true;
-      backup: true;
+    articles: {
+      markdown: true;
+      codeBlocks: true;
+      seoOptimization: true;
     };
   };
   
-  ai: {
-    service: 'Gemini 1.5 Pro';
-    features: {
-      generation: true;
-      enhancement: true;
+  twitter: {
+    threads: {
+      splitting: true;
       formatting: true;
+      scheduling: true;
     };
-    integration: {
-      streaming: true;
-      contextual: true;
-      memory: true;
+    media: {
+      images: true;
+      codeSnippets: true;
+      links: true;
     };
   };
 }
 ```
 
-### 3.3 Research System
+## 3. Technical Architecture
+
+### 3.1 State Management
 ```typescript
-interface ResearchSystem {
-  collection: {
-    scraping: true;
-    vectorization: true;
-    storage: {
-      service: 'Cloud Storage';
-      vector: 'pgvector';
+interface StateArchitecture {
+  clientState: {
+    technology: 'Jotai';
+    features: {
+      atomicUpdates: true;
+      persistence: true;
+      realtime: true;
     };
   };
   
-  processing: {
-    service: 'Cloud Run';
+  serverState: {
+    technology: 'TanStack Query';
     features: {
-      extraction: true;
-      summarization: true;
-      categorization: true;
+      caching: true;
+      backgroundUpdates: true;
+      optimisticUpdates: true;
     };
+  };
+  
+  persistence: {
+    local: 'LocalStorage';
+    remote: 'Supabase';
+    sync: true;
+  };
+}
+```
+
+### 3.2 AI Integration
+```typescript
+interface AIArchitecture {
+  primary: {
+    service: 'Gemini 1.5 Pro';
+    features: [
+      'Content Generation',
+      'Research Analysis',
+      'Code Understanding'
+    ];
+  };
+  
+  vectorization: {
+    storage: 'pgvector';
+    features: [
+      'Semantic Search',
+      'Content Similarity',
+      'Reference Management'
+    ];
+  };
+  
+  development: {
+    service: 'Claude 3.5 Sonnet';
+    features: [
+      'Code Generation',
+      'Development Assistance',
+      'Documentation'
+    ];
   };
 }
 ```
@@ -181,22 +240,22 @@ interface ResearchSystem {
 ### 4.1 Phase 1: Foundation (Week 1)
 ```typescript
 interface Phase1 {
-  infrastructure: {
-    gcp: {
-      projectSetup: true;
-      serviceConfiguration: true;
-      authentication: true;
-    };
-    supabase: {
-      databaseSetup: true;
-      vectorization: true;
-    };
+  core: {
+    workflowCanvas: true;
+    stateManagement: true;
+    authentication: true;
   };
   
   features: {
-    basicWorkflow: true;
-    authentication: true;
-    storage: true;
+    basicNodes: true;
+    simpleWorkflows: true;
+    userProfiles: true;
+  };
+  
+  infrastructure: {
+    gcpSetup: true;
+    supabaseIntegration: true;
+    cicdPipeline: true;
   };
 }
 ```
@@ -204,195 +263,120 @@ interface Phase1 {
 ### 4.2 Phase 2: Core Features (Week 2)
 ```typescript
 interface Phase2 {
-  ai: {
-    geminiIntegration: true;
-    vectorStorage: true;
-    promptManagement: true;
+  research: {
+    scraping: true;
+    vectorization: true;
+    storage: true;
   };
   
   content: {
-    editor: true;
     generation: true;
-    storage: true;
-  };
-  
-  research: {
-    scraping: true;
-    processing: true;
-    storage: true;
-  };
-}
-```
-
-### 4.3 Phase 3: Advanced Features (Week 3)
-```typescript
-interface Phase3 {
-  automation: {
-    scheduling: true;
-    triggers: true;
-    monitoring: true;
-  };
-  
-  optimization: {
-    performance: true;
-    scaling: true;
-    caching: true;
-  };
-  
-  analytics: {
-    tracking: true;
-    reporting: true;
-    insights: true;
-  };
-}
-```
-
-## 5. Performance Requirements
-
-### 5.1 Technical Performance
-```typescript
-interface PerformanceRequirements {
-  cloudRun: {
-    responseTime: '< 500ms';
-    concurrency: 80;
-    availability: '99.95%';
-  };
-  
-  storage: {
-    uploadSpeed: '> 10MB/s';
-    downloadSpeed: '> 50MB/s';
-    availability: '99.9%';
+    editing: true;
+    templates: true;
   };
   
   ai: {
-    responseTime: '< 3s';
-    streamingLatency: '< 500ms';
-    accuracy: '> 95%';
+    geminiIntegration: true;
+    promptManagement: true;
+    vectorSearch: true;
   };
 }
 ```
 
-### 5.2 User Experience
+### 4.3 Phase 3: Platform Integration (Week 3)
 ```typescript
-interface UXRequirements {
-  interaction: {
-    pageLoad: '< 2s';
-    workflowResponse: '< 1s';
-    editorLatency: '< 100ms';
-  };
-  
-  reliability: {
-    errorRate: '< 1%';
-    dataLoss: '0%';
-    uptime: '99.9%';
-  };
-}
-```
-
-## 6. Security Requirements
-
-### 6.1 Platform Security
-```typescript
-interface SecurityRequirements {
-  gcp: {
-    cloudArmor: true;
-    secretManager: true;
-    iap: true;
-  };
-  
-  authentication: {
-    provider: 'Supabase Auth';
-    mfa: false; // Future
-    sso: false; // Future
-  };
-  
-  data: {
-    encryption: {
-      atRest: true;
-      inTransit: true;
-    };
-    backup: {
-      frequency: 'daily';
-      retention: '30 days';
-    };
-  };
-}
-```
-
-## 7. Monitoring & Analytics
-
-### 7.1 System Monitoring
-```typescript
-interface MonitoringRequirements {
-  services: {
-    cloudMonitoring: true;
-    cloudLogging: true;
-    cloudTrace: true;
-  };
-  
-  metrics: {
-    performance: true;
-    errors: true;
-    usage: true;
-  };
-  
-  alerts: {
-    performance: true;
-    security: true;
-    costs: true;
-  };
-}
-```
-
-### 7.2 Business Analytics
-```typescript
-interface AnalyticsRequirements {
-  tracking: {
-    userGrowth: true;
-    engagement: true;
-    content: true;
-  };
-  
-  reporting: {
-    automated: true;
-    customizable: true;
-    exportable: true;
-  };
-}
-```
-
-## 8. Future Considerations
-
-### 8.1 Scalability
-```typescript
-interface ScalabilityPlans {
-  infrastructure: {
-    multiRegion: boolean;
-    loadBalancing: boolean;
-    globalCDN: boolean;
+interface Phase3 {
+  platforms: {
+    linkedin: true;
+    twitter: true;
   };
   
   features: {
-    enterprise: boolean;
-    customization: boolean;
-    apiAccess: boolean;
+    scheduling: true;
+    analytics: true;
+    optimization: true;
+  };
+  
+  automation: {
+    workflows: true;
+    publishing: true;
+    reporting: true;
   };
 }
 ```
 
-### 8.2 Integration
+## 5. User Stories
+
+### 5.1 Content Creation
 ```typescript
-interface IntegrationPlans {
-  platforms: {
-    socialMedia: string[];
-    cms: string[];
-    analytics: string[];
+interface ContentStories {
+  research: [
+    'Find relevant technical articles',
+    'Extract key information',
+    'Store references',
+    'Generate summaries'
+  ];
+  
+  creation: [
+    'Generate content from research',
+    'Maintain consistent voice',
+    'Format for platforms',
+    'Schedule publication'
+  ];
+  
+  optimization: [
+    'Analyze performance',
+    'A/B test content',
+    'Improve engagement',
+    'Track growth'
+  ];
+}
+```
+
+## 6. Future Considerations
+
+### 6.1 Scalability
+```typescript
+interface ScalabilityPlans {
+  multiUser: {
+    teams: boolean;
+    collaboration: boolean;
+    permissions: boolean;
   };
   
-  services: {
-    aiModels: string[];
-    databases: string[];
-    monitoring: string[];
+  enterprise: {
+    customization: boolean;
+    integration: boolean;
+    support: boolean;
+  };
+  
+  platforms: {
+    additional: string[];
+    api: boolean;
+    marketplace: boolean;
+  };
+}
+```
+
+### 6.2 Advanced Features
+```typescript
+interface AdvancedFeatures {
+  ai: {
+    customModels: boolean;
+    finetuning: boolean;
+    automation: boolean;
+  };
+  
+  collaboration: {
+    realtime: boolean;
+    comments: boolean;
+    workflow: boolean;
+  };
+  
+  analytics: {
+    advanced: boolean;
+    predictions: boolean;
+    optimization: boolean;
   };
 }
 ```
