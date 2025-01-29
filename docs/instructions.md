@@ -58,7 +58,10 @@ interface TechnologyStack {
     framework: 'Next.js 14';
     language: 'TypeScript';
     styling: 'Tailwind CSS';
-    stateManagement: 'Jotai';
+    stateManagement: {
+    uiState: 'Jotai',
+    serverState: 'TanStack Query',
+  }
     workflowEngine: 'ReactFlow';
     editor: 'TipTap';
     components: 'shadcn/ui';
